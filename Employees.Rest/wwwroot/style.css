@@ -1,0 +1,149 @@
+body {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    margin: 0
+}
+
+header {
+    background-color: #104BA9;
+    height: 80px;
+    align-items: center;
+    display: flex;
+}
+
+.title {
+    color: white;
+    margin: 0px;
+    margin-left: 50px;
+}
+
+nav {
+    width: 100%;
+}
+
+.push-right {
+    text-align: right;
+    margin: 0px auto 0px auto;
+}
+
+form {
+    width: 100%;
+    /* border: #06266F solid 1px; */
+}
+
+a {
+    text-decoration: none;
+}
+
+main {
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    max-width: 1300px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td,
+th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #ddd;
+}
+
+th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #06266F;
+    color: white;
+}
+
+#pagination {
+    margin-top: 20px;
+    align-items: center;
+    text-align: center;
+}
+
+.button {
+    display: inline-block;
+    color: white;
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 50px;
+    font-size: 30px;
+    margin: 5px;
+    background-color: #1240AB;
+    opacity: 0.9;
+}
+
+.active {
+    background-color: #A68900;
+    opacity: 1;
+}
+
+.button:hover {
+    opacity: 1;
+}
+
+form input {
+    box-sizing: border-box;
+}
+
+#container1 {
+    padding: 16px;
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    display: none;
+}
+
+input[type=text],
+input[type=date] {
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+}
+
+input[type=text]:focus,
+input[type=date]:focus {
+    background-color: #ddd;
+    outline: none;
+}
+
+hr {
+    border: 1px solid #f1f1f1;
+    margin-bottom: 25px;
+}
+
+.createbtn {
+    background-color: #1240AB;
+    color: white;
+    padding: 16px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+    font-weight: 700;
+}
+
+.createbtn:hover {
+    opacity: 1;
+}

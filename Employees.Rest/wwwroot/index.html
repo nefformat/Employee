@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1 class="title">Список сотрудников компании</h1>
+    </header>
+    <main>
+        <nav>
+            <a href="#" title="Добавить">
+                <div class="push-right">
+                    <div id="btnShowNewEmployee" class="button">
+                        +
+                    </div>
+                </div>
+            </a>
+        </nav>
+
+        <div id="container1">
+            <form id="createemployee" action="#">
+                <h2>Новый сотрудник</h2>
+                <p>Для создания учетной записи необходимо заполнить все поля.</p>
+                <hr>
+                <label for="name"><b>Фамилия Имя Отчество</b></label>
+                <input type="text" placeholder="Фамилия Имя Отчество" name="name" required>
+
+                <label for="department"><b>Отдел</b></label>
+                <input type="text" placeholder="Отдел" name="department" required>
+
+                <label for="position"><b>Должность</b></label>
+                <input type="text" placeholder="Должность" name="position" required>
+
+                <label for="manager"><b>Руководитель</b></label>
+                <input type="text" placeholder="Руководитель" name="manager" required>
+
+                <label for="start"><b>Дата приема на работу</b></label>
+                <input type="date" placeholder="01.01.2015" name="start" required>
+
+                <button type="submit" class="createbtn" id="btnCreate">Создать</button>
+            </form>
+        </div>
+        <div id="container2">
+            <table id="employeesTable">
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>ФИО</th>
+                        <th>Отдел</th>
+                        <th>Должность</th>
+                        <th>Руководитель</th>
+                        <th>Начало работы</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                </tbody>
+            </table>
+            <div id="pagination">
+                <!---
+                <a href="#" title="В начало">
+                    <div class="button">&laquo;</div>
+                </a>
+
+                <a href="#">
+                    <div class="button">1</div>
+                </a>
+                <a href="#">
+                    <div class="button active">2</div>
+                </a>
+                <a href="#">
+                    <div class="button">3</div>
+                </a>
+                <a href="#">
+                    <div class="button">...</div>
+                </a>
+                <a href="#">
+                    <div class="button">5</div>
+                </a>
+                <a href="#">
+                    <div class="button">6</div>
+                </a>
+                <a href="#">
+                    <div class="button">7</div>
+                </a>
+                <a href="#" title="В конец">
+                    <div class="button">&raquo;</div>
+                </a>
+                -->
+            </div>
+        </div>
+
+    </main>
+</body>
+
+</html>
