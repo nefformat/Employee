@@ -23,7 +23,7 @@
         </nav>
 
         <div id="container1">
-            <form id="createemployee" action="#">
+            <form id="createemployee" action="api">
                 <h2>Новый сотрудник</h2>
                 <p>Для создания учетной записи необходимо заполнить все поля.</p>
                 <hr>
@@ -59,44 +59,18 @@
                     </tr>
                 </thead>
                 <tbody>
-
-
                 </tbody>
             </table>
             <div id="pagination">
-                <!---
-                <a href="#" title="В начало">
-                    <div class="button">&laquo;</div>
-                </a>
-
-                <a href="#">
-                    <div class="button">1</div>
-                </a>
-                <a href="#">
-                    <div class="button active">2</div>
-                </a>
-                <a href="#">
-                    <div class="button">3</div>
-                </a>
-                <a href="#">
-                    <div class="button">...</div>
-                </a>
-                <a href="#">
-                    <div class="button">5</div>
-                </a>
-                <a href="#">
-                    <div class="button">6</div>
-                </a>
-                <a href="#">
-                    <div class="button">7</div>
-                </a>
-                <a href="#" title="В конец">
-                    <div class="button">&raquo;</div>
-                </a>
-                -->
             </div>
         </div>
-
+        <div id="modalWindow">
+            <div class="modal-content">
+                <p id="errorMessage" />
+                <hr>
+                <p id="btnClose"><a href="#">Закрыть</a></p>
+            </div>
+        </div>
     </main>
 </body>
 

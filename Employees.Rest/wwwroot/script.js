@@ -1,16 +1,62 @@
 "use strict";
 
+function closeButton(e) {
+    e.preventDefault();
+    document.getElementById('modalWindow').style.display = "none";
+}
+
 function clickRemove(e) {
     e.preventDefault();
-    console.log(e.srcElement.id);
+    let id = e.srcElement.id;
+    let recordCount = document.getElementById('employeesTable').tBodies[0].childElementCount;
+    let pageCount = document.getElementById('pagination').childElementCount - 2;
+    console.log("Pages: " + pageCount);
+    //if (recordCount == 1 && )
+
+    console.log("Records: " + recordCount);
+
+
+
+    let request = new Request(API_URL + id, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    console.log(request);
+
+    fetch(request).then(
+        function(response) {
+            console.log("RAW: ");
+            console.log(response);
+            if (response.status != 200) {
+                console.log("ERRROR");
+                showError(response);
+            } else {
+                console.log("OKOKOK");
+                if (recordCount == 1 && pageCount > 1)
+                    PAGE = PAGE - 1;
+                fetchData();
+            }
+        },
+        function(error) {
+            console.log("ERRROR2");
+            showError(error);
+        }
+    );
+
+
+
 }
 
 function clickPage(e) {
     e.preventDefault();
     if (e.srcElement.id != "")
-        console.log(e.srcElement.id);
+        PAGE = e.srcElement.id;
     else
-        console.log(e.srcElement.parentNode.id);
+        PAGE = e.srcElement.parentNode.id;
+    fetchData();
 }
 
 function clickCreate(event) {
@@ -49,11 +95,9 @@ function clickCreate(event) {
 }
 
 function registerHandlers() {
-    let elem = document.getElementById('btnShowNewEmployee');
-    elem.addEventListener("click", showNewEmplyee);
-
-    elem = document.getElementById('btnCreate');
-    elem.addEventListener("click", clickCreate);
+    document.getElementById('btnShowNewEmployee').addEventListener("click", showNewEmplyee);
+    document.getElementById('btnCreate').addEventListener("click", clickCreate);
+    document.getElementById('btnClose').addEventListener("click", closeButton);
 }
 
 function showNewEmplyee() {
@@ -73,19 +117,21 @@ function showNewEmplyee() {
 }
 
 function showTable(data) {
-    let table = document.getElementById('employeesTable');
-    if (data.length == 0) {
-        let row = table.insertRow();
+    let oldTbody = document.getElementById('employeesTable').tBodies[0];
+    var newTbody = document.createElement('tbody');
+    if (!data || data.length == 0) {
+        let row = newTbody.insertRow();
         let cellNoData = row.insertCell();
         cellNoData.colSpan = 7;
         cellNoData.style.textAlign = "center";
         cellNoData.textContent = "Нет данных о сотрудниках";
     } else {
+
         for (var i = 0; i < data.length; i++) {
-            let row = table.insertRow();
+            let row = newTbody.insertRow();
 
             let cellNum = row.insertCell();
-            cellNum.textContent = i + 1;
+            cellNum.textContent = data[i].id;
 
             let cellName = row.insertCell();
             cellName.textContent = data[i].name;
@@ -97,7 +143,7 @@ function showTable(data) {
             cellPosition.textContent = data[i].position;
 
             let cellLeader = row.insertCell();
-            cellLeader.textContent = data[i].leader.value;
+            cellLeader.textContent = ""; //data[i].leader.value;
 
             let cellStartDate = row.insertCell();
             cellStartDate.textContent = data[i].startDate;
@@ -106,7 +152,6 @@ function showTable(data) {
 
             let link = document.createElement("a");
             link.href = "#";
-            //data[i].id;
             link.id = data[i].id;
             link.addEventListener("click", clickRemove);
             let buttonText = document.createTextNode("Удалить");
@@ -116,6 +161,7 @@ function showTable(data) {
             //actionCell.textContent = "Удалить Id: " + data[i].id;
         }
     }
+    oldTbody.parentNode.replaceChild(newTbody, oldTbody)
 }
 
 function createPageButton(text, dstLink, active) {
@@ -141,8 +187,14 @@ function createPageButton(text, dstLink, active) {
 }
 
 function showPagination(pageData) {
+    let pagination = document.getElementById("pagination");
+    while (pagination.firstChild) {
+        pagination.removeChild(pagination.firstChild);
+    }
+
     if (pageData == null)
         return;
+
     if (pageData.activePage == 1)
         createPageButton('«', 1, true);
     else
@@ -172,83 +224,40 @@ function showPagination(pageData) {
 }
 
 function fetchData() {
-    let promise = new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve(testFetchData());
-        }, 1);
+    let url = API_URL + '?page=' + PAGE;
 
-    });
-
-    promise.then(result => {
-        showTable(result.data);
-        showPagination(result.pagination);
-    }, error => {
-        alert("Rejected: " + error); // error - аргумент reject
-    });
-
+    fetch(url)
+        .then(result => {
+            if (result.status == 200) {
+                result.json()
+                    .then(result => {
+                        console.log(result);
+                        showTable(result.data);
+                        showPagination(result.pagination);
+                    })
+            } else {
+                showError(result);
+            }
+        }, error => {
+            showError(error);
+        });
 }
 
-function testFetchData() {
-    return {
-        pagination: {
-            activePage: 1,
-            totalPages: 10
-        },
-        data: [{
-                id: 1,
-                name: "Иванов Иван Петрович",
-                department: "Маркетинг",
-                position: "Маркетолог",
-                leader: {
-                    id: 1,
-                    value: "Cтепанов Владимир Станиславович"
-                },
-                startDate: "01.01.2013"
-            },
-            {
-                id: 2,
-                name: "Иванов Иван Петрович",
-                department: "Маркетинг",
-                position: "Маркетолог",
-                leader: {
-                    id: 1,
-                    value: "Cтепанов Владимир Станиславович"
-                },
-                startDate: "01.01.2013"
-            },
-            {
-                id: 3,
-                name: "Зубко Елена Вадимовна",
-                department: "Маркетинг",
-                position: "Маркетолог",
-                leader: {
-                    id: 1,
-                    value: "Cтепанов Владимир Станиславович"
-                },
-                startDate: "01.01.2013"
-            },
-            {
-                id: 4,
-                name: "Зубко Елена Вадимовна",
-                department: "Маркетинг",
-                position: "Маркетолог",
-                leader: {
-                    id: 1,
-                    value: "Cтепанов Владимир Станиславович"
-                },
-                startDate: "01.01.2013"
-            }
-        ]
-    }
+function showError(text) {
+    document.getElementById('modalWindow').style.display = 'block';
+    let newError = document.createElement('p');
+    newError.id = 'errorMessage';
+    let oldError = document.getElementById('errorMessage');
+
+    newError.appendChild(document.createTextNode(text));
+    oldError.parentNode.replaceChild(newError, oldError)
 }
 
 function onLoad() {
     registerHandlers();
-    //populateTable();
     fetchData();
-    // showPagination({
-    //     activePage: 4,
-    //     totalPages: 10
-    // });
 }
+
+var PAGE = 1;
+var API_URL = 'http://localhost:5000/api/';
 window.onload = onLoad;
