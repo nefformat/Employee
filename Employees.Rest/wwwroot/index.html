@@ -27,20 +27,23 @@
                 <h2>Новый сотрудник</h2>
                 <p>Для создания учетной записи необходимо заполнить все поля.</p>
                 <hr>
-                <label for="name"><b>Фамилия Имя Отчество</b></label>
-                <input type="text" placeholder="Фамилия Имя Отчество" name="name" required>
+                <label for="name"><b>Фамилия Имя Отчество:</b></label>
+                <input class="edit" type="text" placeholder="Фамилия Имя Отчество" name="name" required>
 
-                <label for="department"><b>Отдел</b></label>
-                <input type="text" placeholder="Отдел" name="department" required>
+                <label for="department"><b>Отдел:</b></label>
+                <input class="edit" type="text" placeholder="Отдел" name="department" required>
 
-                <label for="position"><b>Должность</b></label>
-                <input type="text" placeholder="Должность" name="position" required>
+                <label for="position"><b>Должность:</b></label>
+                <input class="edit" type="text" placeholder="Должность" name="position" required>
 
-                <label for="manager"><b>Руководитель</b></label>
-                <input type="text" placeholder="Руководитель" name="manager" required>
+                <label for="manager"><b>Руководитель:</b></label>
+                <input list="managers" id="manager" placeholder="Руководитель" class="edit" name="manager" />
+
+                <datalist id="managers">
+                </datalist>
 
                 <label for="start"><b>Дата приема на работу</b></label>
-                <input type="date" placeholder="01.01.2015" name="start" required>
+                <input class="edit" type="date" name="startdate" required>
 
                 <button type="submit" class="createbtn" id="btnCreate">Создать</button>
             </form>
@@ -50,8 +53,8 @@
                 <thead>
                     <tr>
                         <th>№</th>
-                        <th>ФИО</th>
-                        <th>Отдел</th>
+                        <th><a href="#" id="btnNameSort">ФИО</a></th>
+                        <th><a href="#" id="btnDepartmentSort">Отдел</a></th>
                         <th>Должность</th>
                         <th>Руководитель</th>
                         <th>Начало работы</th>

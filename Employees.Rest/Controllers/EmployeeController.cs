@@ -21,6 +21,25 @@ namespace Employees.Rest.Controllers
             _employeesRepo = employeesRepo;
             _pageSize = 5;
         }
+
+        [Route("byname/")]
+        public ActionResult<EmployeesResponse> GetListByName(string name)
+        {
+            if (string.IsNullOrEmpty(name) || name.Length < 3)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            try
+            {
+                return Ok(_employeesRepo.GetListByName(name));
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpGet]
         public ActionResult<EmployeesResponse> Get(int page)
         {
@@ -56,13 +75,34 @@ namespace Employees.Rest.Controllers
             }
         }
         [HttpPost]
-        public IActionResult Add(Employee employee)
+        public IActionResult Add(EmployeeRequest employee)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest(ModelState);
+
+            Employee manager = null;
+
+            if (employee.Manager != null)
+            {
+                manager = _employeesRepo.GetByName(employee.Manager);
+                if (manager == null)
+                {
+                    ModelState.AddModelError(nameof(employee.Manager), "Manager is not be found");
+                    return BadRequest(ModelState);
+                }
+            }
+
             try
             {
-                _employeesRepo.Add(employee);
+                Employee emp = new Employee();
+                emp.Id = employee.Id;
+                emp.Name = employee.Name;
+                emp.Department = employee.Department;
+                emp.Position = employee.Position;
+                emp.Manager = manager;
+                emp.StartDate = employee.StartDate;
+
+                _employeesRepo.Add(emp);
                 return Ok();
             }
             catch

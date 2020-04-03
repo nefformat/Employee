@@ -61,7 +61,8 @@ tr:hover {
     background-color: #ddd;
 }
 
-th {
+th,
+th a {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
@@ -111,8 +112,7 @@ form input {
     display: none;
 }
 
-input[type=text],
-input[type=date] {
+.edit {
     width: 100%;
     padding: 15px;
     margin: 5px 0 22px 0;
@@ -121,8 +121,8 @@ input[type=date] {
     background: #f1f1f1;
 }
 
-input[type=text]:focus,
-input[type=date]:focus {
+.edit:focus,
+.edit:focus {
     background-color: #ddd;
     outline: none;
 }
@@ -170,4 +170,8 @@ hr {
 
 #btnClose {
     text-align: center;
+}
+
+.validate-error {
+    border: 2px solid red;
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Employees.Rest.Attributes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Employees.Rest.Models
 {
-    public class Employee
+    public class EmployeeRequest
     {
         public int Id { get; set; }
         [Required]
@@ -19,7 +20,8 @@ namespace Employees.Rest.Models
         [Display(Name = "Должность")]
         public string Position { get; set; }
         [Display(Name = "Руководитель")]
-        public Employee Manager { get; set; }
+        [Manager]
+        public string Manager { get; set; }
         [Required]
         [Display(Name = "Дата начала работы")]
         [DataType(DataType.Date)]

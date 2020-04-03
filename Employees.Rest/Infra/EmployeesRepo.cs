@@ -14,6 +14,16 @@ namespace Employees.Rest.Infra
             _employees = new List<Employee>();
             FakePopulate();
         }
+
+        public Employee GetByName(string name)
+        {
+            return _employees.Where(x => x.Name == name).FirstOrDefault();
+        }
+
+        public IEnumerable<Employee> GetListByName(string name, int take = 5)
+        {
+            return _employees.Where(x => x.Name.Contains(name)).Take(take);
+        }
         public IEnumerable<Employee> Get(int skip, int take)
         {
             if (skip < 0 || take < 1)
@@ -30,6 +40,7 @@ namespace Employees.Rest.Infra
         {
             if (employee == null)
                 throw new ArgumentNullException();
+            employee.Id = _employees.Max(x => x.Id) + 1;
             _employees.Add(employee);
         }
         public void Remove(Employee employee)
