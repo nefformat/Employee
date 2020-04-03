@@ -145,7 +145,8 @@ function clickRemove(e) {
     fetch(request).then(
         function(response) {
             if (response.status != 200) {
-                showError(response);
+                console.log(response);
+                showError(response.statusText);
             } else {
                 if (recordCount == 1 && pageCount > 1)
                     PAGE = PAGE - 1;
@@ -274,7 +275,6 @@ function showTable() {
         nameDepartment.innerHTML = 'Отдел &uarr;';
     else
         nameDepartment.innerHTML = 'Отдел';
-
 
     let oldTbody = document.getElementById('employeesTable').tBodies[0];
     var newTbody = document.createElement('tbody');
