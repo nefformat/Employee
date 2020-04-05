@@ -41,6 +41,26 @@ namespace Employees.Rest.Controllers
         }
 
         [HttpGet]
+        [Route("hierarchy/")]
+        public ActionResult<IEnumerable<HierarchyResponse>> GetHierarchy(int id)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            Employee employee = _employeesRepo.GetById(id);
+
+            if (employee == null)
+                return NotFound();
+
+            IEnumerable<HierarchyResponse> hierarchy = _employeesRepo.GetHierarchy(employee);
+
+            if (hierarchy == null)
+                return NotFound();
+
+            return Ok(hierarchy);
+        }
+
+        [HttpGet]
         public ActionResult<EmployeesResponse> Get(int page)
         {
             int totalPages = (int)Math.Ceiling((double)_employeesRepo.Count() / _pageSize);
@@ -57,10 +77,25 @@ namespace Employees.Rest.Controllers
 
             try
             {
+                List<EmployeeResponse> employees = _employeesRepo.Get((page - 1) * _pageSize, _pageSize)
+                    .Select(x =>
+                        new EmployeeResponse()
+                        {
+                            Id = x.Id,
+                            Name = x.Name,
+                            Department = x.Department,
+                            Position = x.Position,
+                            Manager = x.Manager?.Name,
+                            StartDate = x.StartDate
+                        }
+                    )
+                    .ToList();
+                
+
                 EmployeesResponse employeesResponse =
                     new EmployeesResponse
                     {
-                        Data = _employeesRepo.Get((page - 1) * _pageSize, _pageSize),
+                        Data = employees,
                         Pagination = new PaginationResponse
                         {
                             ActivePage = page,

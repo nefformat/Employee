@@ -7,7 +7,7 @@ namespace Employees.Rest.Models
 {
     public class EmployeesResponse
     {
-        public IEnumerable<Employee> Data { get; set; }
+        public IEnumerable<EmployeeResponse> Data { get; set; }
         public PaginationResponse Pagination { get; set; }
     }
 }

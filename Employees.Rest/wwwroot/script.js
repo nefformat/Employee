@@ -131,7 +131,7 @@ function sortByDepartment(e) {
 
 function clickRemove(e) {
     e.preventDefault();
-    let id = e.srcElement.id;
+    let id = e.srcElement.parentNode.parentNode.id;
     let recordCount = document.getElementById('employeesTable').tBodies[0].childElementCount;
     let pageCount = document.getElementById('pagination').childElementCount - 2;
 
@@ -259,6 +259,39 @@ function showNewEmployee(e) {
     }
 }
 
+function showHierarchy(element, data) {
+    let ol = document.createElement('ol');
+
+    for (let manager of data) {
+        let li = document.createElement('li');
+        li.appendChild(document.createTextNode(manager.name));
+        ol.appendChild(li);
+    }
+
+    let td = element.srcElement.parentNode;
+    td.replaceChild(ol, td.firstChild);
+}
+
+function clickHierarchy(e) {
+    e.preventDefault();
+    let id = e.srcElement.parentNode.parentNode.id;
+    let url = API_URL + 'hierarchy?id=' + id;
+
+    fetch(url)
+        .then(result => {
+            if (result.status == 200) {
+                result.json()
+                    .then(result => {
+                        showHierarchy(e, result);
+                    })
+            } else {
+                showError(result);
+            }
+        }, error => {
+            showError(error);
+        });
+}
+
 function showTable() {
     let nameHeader = document.getElementById('btnNameSort');
     if (SORT_BY_NAME_ORDER == 1)
@@ -266,7 +299,7 @@ function showTable() {
     else if (SORT_BY_NAME_ORDER == -1)
         nameHeader.innerHTML = 'ФИО &uarr;';
     else
-        nameHeader.innerHTML = 'ФИО';
+        nameHeader.innerHTML = 'ФИО &#8693;';
 
     let nameDepartment = document.getElementById('btnDepartmentSort');
     if (SORT_BY_DEPARTMENT_ORDER == 1)
@@ -274,7 +307,7 @@ function showTable() {
     else if (SORT_BY_DEPARTMENT_ORDER == -1)
         nameDepartment.innerHTML = 'Отдел &uarr;';
     else
-        nameDepartment.innerHTML = 'Отдел';
+        nameDepartment.innerHTML = 'Отдел &#8693;';
 
     let oldTbody = document.getElementById('employeesTable').tBodies[0];
     var newTbody = document.createElement('tbody');
@@ -288,7 +321,7 @@ function showTable() {
 
         for (var i = 0; i < EMPLOYEES.length; i++) {
             let row = newTbody.insertRow();
-
+            row.id = EMPLOYEES[i].id;
             let cellNum = row.insertCell();
             cellNum.textContent = EMPLOYEES[i].id;
 
@@ -302,7 +335,16 @@ function showTable() {
             cellPosition.textContent = EMPLOYEES[i].position;
 
             let cellManager = row.insertCell();
-            cellManager.textContent = EMPLOYEES[i].manager ? EMPLOYEES[i].manager.name : "";
+            if (EMPLOYEES[i].manager) {
+                let linkHierarchy = document.createElement("a");
+                linkHierarchy.href = "#";
+                linkHierarchy.addEventListener("click", clickHierarchy);
+                linkHierarchy.appendChild(document.createTextNode(EMPLOYEES[i].manager));
+                linkHierarchy.title = "Показать всех";
+                cellManager.appendChild(linkHierarchy);
+            } else {
+                cellManager.textContent = "Руководитель отсутсвует";
+            }
 
             let startDate = "";
             let cellStartDate = row.insertCell();
@@ -312,15 +354,12 @@ function showTable() {
             cellStartDate.textContent = startDate.toLocaleDateString("ru-RU");;
 
             let actionCell = row.insertCell();
+            let linkRemove = document.createElement("a");
+            linkRemove.href = "#";
+            linkRemove.addEventListener("click", clickRemove);
+            linkRemove.appendChild(document.createTextNode("Удалить"));
 
-            let link = document.createElement("a");
-            link.href = "#";
-            link.id = EMPLOYEES[i].id;
-            link.addEventListener("click", clickRemove);
-            let buttonText = document.createTextNode("Удалить");
-            link.appendChild(buttonText);
-
-            actionCell.appendChild(link);
+            actionCell.appendChild(linkRemove);
         }
     }
     oldTbody.parentNode.replaceChild(newTbody, oldTbody)

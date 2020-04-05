@@ -11,6 +11,7 @@ namespace Employees.Rest.Infra
         Employee GetByName(string name);
         IEnumerable<Employee> GetListByName(string name, int take = 5);
         IEnumerable<Employee> Get(int skip, int take);
+        IEnumerable<HierarchyResponse> GetHierarchy(Employee employee);
         Employee GetById(int id);
         void Add(Employee employee);
         void Remove(Employee employee);
