@@ -18,8 +18,9 @@ namespace Employees.Rest.Models
         [Required]
         [Display(Name = "Должность")]
         public string Position { get; set; }
-        [Display(Name = "Руководитель")]
         public Employee Manager { get; set; }
+        [Display(Name = "Руководитель")]
+        public int? ManagerId { get; set; }
         [Required]
         [Display(Name = "Дата начала работы")]
         [DataType(DataType.Date)]

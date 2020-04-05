@@ -7,6 +7,7 @@ using Employees.Rest.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Employees.Rest.Controllers
 {
@@ -30,14 +31,7 @@ namespace Employees.Rest.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
-            try
-            {
-                return Ok(_employeesRepo.GetListByName(name));
-            }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+            return Ok(_employeesRepo.GetListByName(name));
         }
 
         [HttpGet]
@@ -63,51 +57,44 @@ namespace Employees.Rest.Controllers
         [HttpGet]
         public ActionResult<EmployeesResponse> Get(int page)
         {
-            int totalPages = (int)Math.Ceiling((double)_employeesRepo.Count() / _pageSize);
+            int employeesCount = _employeesRepo.Count();
+            int totalPages = (int)Math.Ceiling((double)employeesCount / _pageSize);
 
             if (page < 1 || page - 1 > totalPages)
                 return NotFound();
 
-            if (_employeesRepo.Count() == 0)
+            if (employeesCount == 0)
                 return new EmployeesResponse
                 {
                     Data = null,
                     Pagination = null
                 };
 
-            try
-            {
-                List<EmployeeResponse> employees = _employeesRepo.Get((page - 1) * _pageSize, _pageSize)
-                    .Select(x =>
-                        new EmployeeResponse()
-                        {
-                            Id = x.Id,
-                            Name = x.Name,
-                            Department = x.Department,
-                            Position = x.Position,
-                            Manager = x.Manager?.Name,
-                            StartDate = x.StartDate
-                        }
-                    )
-                    .ToList();
-                
-
-                EmployeesResponse employeesResponse =
-                    new EmployeesResponse
+            List<EmployeeResponse> employees = _employeesRepo.Get((page - 1) * _pageSize, _pageSize)
+                .Select(x =>
+                    new EmployeeResponse()
                     {
-                        Data = employees,
-                        Pagination = new PaginationResponse
-                        {
-                            ActivePage = page,
-                            TotalPages = totalPages
-                        }
-                    };
-                return Ok(employeesResponse);
-            }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+                        Id = x.Id,
+                        Name = x.Name,
+                        Department = x.Department,
+                        Position = x.Position,
+                        Manager = x.ManagerId == null ? null : _employeesRepo.GetById((int)x.ManagerId).Name,
+                        StartDate = x.StartDate
+                    }
+                )
+                .ToList();
+
+            EmployeesResponse employeesResponse =
+                new EmployeesResponse
+                {
+                    Data = employees,
+                    Pagination = new PaginationResponse
+                    {
+                        ActivePage = page,
+                        TotalPages = totalPages
+                    }
+                };
+            return Ok(employeesResponse);
         }
         [HttpPost]
         public IActionResult Add(EmployeeRequest employee)
@@ -127,42 +114,30 @@ namespace Employees.Rest.Controllers
                 }
             }
 
-            try
-            {
-                Employee emp = new Employee();
-                emp.Id = employee.Id;
-                emp.Name = employee.Name;
-                emp.Department = employee.Department;
-                emp.Position = employee.Position;
-                emp.Manager = manager;
-                emp.StartDate = employee.StartDate;
+            Employee emp = new Employee();
+            emp.Id = employee.Id;
+            emp.Name = employee.Name;
+            emp.Department = employee.Department;
+            emp.Position = employee.Position;
+            emp.ManagerId = manager.Id;
+            emp.StartDate = employee.StartDate;
 
-                _employeesRepo.Add(emp);
-                return Ok();
-            }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+            _employeesRepo.Add(emp);
+            return Ok();
         }
         [HttpDelete("{id:int}")]
         public IActionResult Remove(int id)
         {
-            
+
             if (!ModelState.IsValid)
                 return BadRequest();
-            try
-            {
-                Employee employee = _employeesRepo.GetById(id);
-                if (employee == null)
-                    return NotFound();
-                _employeesRepo.Remove(employee);
-                return Ok();
-            }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+
+            Employee employee = _employeesRepo.GetById(id);
+            if (employee == null)
+                return NotFound();
+            _employeesRepo.Remove(employee);
+            return Ok();
+
         }
     }
 }

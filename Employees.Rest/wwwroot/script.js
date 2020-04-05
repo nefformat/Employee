@@ -264,7 +264,7 @@ function showHierarchy(element, data) {
 
     for (let manager of data) {
         let li = document.createElement('li');
-        li.appendChild(document.createTextNode(manager.name));
+        li.appendChild(document.createTextNode(manager.name + ' (' + manager.subCount + ')'));
         ol.appendChild(li);
     }
 
@@ -440,7 +440,7 @@ function fetchData() {
                         showPagination();
                     })
             } else {
-                showError(result);
+                showError(result.statusText);
             }
         }, error => {
             showError(error);

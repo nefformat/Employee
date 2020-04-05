@@ -25,7 +25,8 @@ namespace Employees.Rest
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IEmployeesRepo, EmployeesRepo>();
+            services.Configure<Settings>(Configuration);
+            services.AddTransient<IEmployeesRepo, SqlEmployeesRepo>();
             services.AddControllers();
         }
 
