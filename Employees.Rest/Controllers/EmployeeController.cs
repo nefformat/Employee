@@ -104,7 +104,7 @@ namespace Employees.Rest.Controllers
 
             Employee manager = null;
 
-            if (employee.Manager != null)
+            if (!string.IsNullOrEmpty(employee.Manager))
             {
                 manager = _employeesRepo.GetByName(employee.Manager);
                 if (manager == null)
@@ -119,7 +119,7 @@ namespace Employees.Rest.Controllers
             emp.Name = employee.Name;
             emp.Department = employee.Department;
             emp.Position = employee.Position;
-            emp.ManagerId = manager.Id;
+            emp.ManagerId = manager?.Id;
             emp.StartDate = employee.StartDate;
 
             _employeesRepo.Add(emp);

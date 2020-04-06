@@ -9,7 +9,7 @@ using System.Data;
 
 namespace Employees.Rest.Infra
 {
-    public class SqlEmployeesRepo: IEmployeesRepo
+    public class SqlEmployeesRepo : IEmployeesRepo
     {
         private string _connectionString;
 
@@ -24,7 +24,7 @@ namespace Employees.Rest.Infra
         }
         public Employee GetByName(string name)
         {
-            if (string.IsNullOrEmpty(null) || name.Length > 100)
+            if (string.IsNullOrEmpty(name) || name.Length > 100)
                 throw new ArgumentOutOfRangeException();
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -155,9 +155,9 @@ namespace Employees.Rest.Infra
                                     Id = reader.GetInt32(0),
                                     Name = reader.IsDBNull(1) ? "" : reader.GetString(1),
                                     Department = reader.IsDBNull(2) ? "" : reader.GetString(2),
-                                    Position = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                                    Position = reader.IsDBNull(2) ? "" : reader.GetString(3),
                                     ManagerId = reader.IsDBNull(4) ? null : (int?)reader.GetInt32(4),
-                                    StartDate = reader.GetDateTime(5)                                    
+                                    StartDate = reader.GetDateTime(5)
                                 }
                             );
                         }
@@ -204,7 +204,8 @@ namespace Employees.Rest.Infra
                             );
                         }
                         connection.Close();
-
+                        employees.Reverse();
+                        
                         return employees;
                     }
                     return null;
@@ -256,11 +257,87 @@ namespace Employees.Rest.Infra
         }
         public void Add(Employee employee)
         {
-            throw new NotImplementedException();
+            if (employee == null)
+                throw new ArgumentNullException();
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand command = new SqlCommand("AddEmployee", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    SqlParameter nameParam = new SqlParameter
+                    {
+                        ParameterName = "@name",
+                        Value = employee.Name
+                    };
+                    command.Parameters.Add(nameParam);
+
+                    SqlParameter departmentParam = new SqlParameter
+                    {
+                        ParameterName = "@department",
+                        Value = employee.Department
+                    };
+                    command.Parameters.Add(departmentParam);
+
+                    SqlParameter positionParam = new SqlParameter
+                    {
+                        ParameterName = "@position",
+                        Value = employee.Position
+                    };
+                    command.Parameters.Add(positionParam);
+
+                    SqlParameter managerIdParam = new SqlParameter
+                    {
+                        ParameterName = "@managerId",
+                        Value = (object)employee.ManagerId ?? (object)DBNull.Value
+                    };
+                    command.Parameters.Add(managerIdParam);
+
+                    SqlParameter startDateParam = new SqlParameter
+                    {
+                        ParameterName = "@startDate",
+                        Value = employee.StartDate
+                    };
+                    command.Parameters.Add(startDateParam);
+
+                    connection.Open();
+
+                    command.ExecuteNonQuery();
+
+                    connection.Close();
+
+                }
+            }
         }
+
         public void Remove(Employee employee)
         {
-            throw new NotImplementedException();
+            if (employee == null)
+                throw new ArgumentNullException();
+            if (employee.Id <= 0)
+                throw new ArgumentOutOfRangeException();
+
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand command = new SqlCommand("RemoveById", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    SqlParameter nameParam = new SqlParameter
+                    {
+                        ParameterName = "@id",
+                        Value = employee.Id
+                    };
+                    command.Parameters.Add(nameParam);
+
+                    connection.Open();
+
+                    command.ExecuteNonQuery();
+
+                    connection.Close();
+
+                }
+            }
         }
         public int Count()
         {

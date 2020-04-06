@@ -260,16 +260,16 @@ function showNewEmployee(e) {
 }
 
 function showHierarchy(element, data) {
-    let ol = document.createElement('ol');
+    let ul = document.createElement('ul');
 
     for (let manager of data) {
         let li = document.createElement('li');
         li.appendChild(document.createTextNode(manager.name + ' (' + manager.subCount + ')'));
-        ol.appendChild(li);
+        ul.appendChild(li);
     }
 
     let td = element.srcElement.parentNode;
-    td.replaceChild(ol, td.firstChild);
+    td.replaceChild(ul, td.firstChild);
 }
 
 function clickHierarchy(e) {
