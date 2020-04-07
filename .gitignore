@@ -1,5 +1,9 @@
 ﻿.vs
+.config
 Debug
 obj
 packages
 node_modules
+Employees.Rest/Employees.Rest.csproj.user
+bin
+Employees.Rest/Properties

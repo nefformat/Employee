@@ -229,7 +229,6 @@ var Main = (function () {
         formData.forEach(function (value, key) { return obj[key] = value; });
         this.fetcher.addEmployee(obj)
             .then(function (x) {
-            console.log(x);
             if (x.status == 200) {
                 _this.showError("Пользователь успешно добавлен");
                 _this.refetchEmployeesList();
