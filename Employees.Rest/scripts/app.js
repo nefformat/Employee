@@ -511,6 +511,6 @@ var Fetcher = (function () {
 }());
 var main;
 window.onload = function () {
-    main = new Main('http://localhost:5000/api/');
+    main = new Main('/api/');
 };
 //# sourceMappingURL=app.js.map

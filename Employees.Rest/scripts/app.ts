@@ -524,5 +524,5 @@ class Fetcher {
 
 let main;
 window.onload = () => {
-    main = new Main('http://localhost:5000/api/');
+    main = new Main('/api/');
 }
