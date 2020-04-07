@@ -24,7 +24,7 @@ namespace Employees.Rest.Models
         public string Manager { get; set; }
         [Required]
         [Display(Name = "Дата начала работы")]
-        [DataType(DataType.Date)]
+        [StartDateAttribute]
         public DateTime StartDate { get; set; }
     }
 }
