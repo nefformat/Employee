@@ -40,6 +40,7 @@ class Main {
         this.showAddEmployeeTab = true;
         this.pagination = new Pagination();
         this.pagination.activePage = 1;
+        this.pagination.totalPages = 0;
         this.sortByNameOrder = 0;
         this.sortByDepartmentOrder = 0;
         this.placeDate();
@@ -243,6 +244,7 @@ class Main {
                 }
             })
             .catch(ex => {
+                console.log(ex);
                 this.showError(ex.statusText)
             });
     }
@@ -285,6 +287,11 @@ class Main {
         while (pagination.firstChild) {
             pagination.removeChild(pagination.firstChild);
         }
+        if (this.pagination == null ||
+            this.pagination.activePage == null ||
+            this.pagination.totalPages == null ||
+            this.pagination.totalPages == 0)
+            return;
 
         if (this.pagination.activePage == 1)
             this.createPageButton('«', 1, true);
@@ -317,7 +324,8 @@ class Main {
         this.fetcher.fetchData(this.pagination.activePage)
             .then(response => {
                 this.employees = response.employees;
-                this.pagination = response.pagination;
+                if (response.pagination != null)
+                    this.pagination = response.pagination;
                 this.refreshTable();
                 this.refreshPagination();
             })
@@ -425,7 +433,7 @@ class Main {
     clickRemove(id: number): void {
         this.fetcher.removeEmployee(id)
             .then(() => {
-                if (this.employees.length == 1 || this.pagination.activePage > 2)
+                if (this.employees.length == 1 && this.pagination.activePage > 2)
                     this.pagination.activePage--;
                 this.refetchEmployeesList();
             })

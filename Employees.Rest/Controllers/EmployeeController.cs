@@ -64,11 +64,11 @@ namespace Employees.Rest.Controllers
                 return NotFound();
 
             if (employeesCount == 0)
-                return new EmployeesResponse
-                {
-                    Data = null,
-                    Pagination = null
-                };
+            return new EmployeesResponse
+            {
+                Data = null,
+                Pagination = new PaginationResponse { ActivePage = 1, TotalPages = 0 }
+            };
 
             List<EmployeeResponse> employees = _employeesRepo.Get((page - 1) * _pageSize, _pageSize)
                 .Select(x =>

@@ -3,7 +3,8 @@
   "name": "employees",
   "private": true,
   "devDependencies": {
+    "del": "5.1.0",
     "gulp": "4.0.2",
-    "del": "5.1.0"
+    "typescript": "^3.8.3"
   }
 }

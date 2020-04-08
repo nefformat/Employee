@@ -63,6 +63,7 @@ var Main = (function () {
         this.showAddEmployeeTab = true;
         this.pagination = new Pagination();
         this.pagination.activePage = 1;
+        this.pagination.totalPages = 0;
         this.sortByNameOrder = 0;
         this.sortByDepartmentOrder = 0;
         this.placeDate();
@@ -240,6 +241,7 @@ var Main = (function () {
             }
         })
             .catch(function (ex) {
+            console.log(ex);
             _this.showError(ex.statusText);
         });
     };
@@ -278,6 +280,11 @@ var Main = (function () {
         while (pagination.firstChild) {
             pagination.removeChild(pagination.firstChild);
         }
+        if (this.pagination == null ||
+            this.pagination.activePage == null ||
+            this.pagination.totalPages == null ||
+            this.pagination.totalPages == 0)
+            return;
         if (this.pagination.activePage == 1)
             this.createPageButton('«', 1, true);
         else
@@ -303,7 +310,8 @@ var Main = (function () {
         this.fetcher.fetchData(this.pagination.activePage)
             .then(function (response) {
             _this.employees = response.employees;
-            _this.pagination = response.pagination;
+            if (response.pagination != null)
+                _this.pagination = response.pagination;
             _this.refreshTable();
             _this.refreshPagination();
         })
@@ -401,7 +409,7 @@ var Main = (function () {
         var _this = this;
         this.fetcher.removeEmployee(id)
             .then(function () {
-            if (_this.employees.length == 1 || _this.pagination.activePage > 2)
+            if (_this.employees.length == 1 && _this.pagination.activePage > 2)
                 _this.pagination.activePage--;
             _this.refetchEmployeesList();
         })
@@ -511,6 +519,7 @@ var Fetcher = (function () {
 }());
 var main;
 window.onload = function () {
+    console.log("Hello!");
     main = new Main('/api/');
 };
 //# sourceMappingURL=app.js.map
