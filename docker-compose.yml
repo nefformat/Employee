@@ -1,0 +1,48 @@
+version: '3.3'
+services:
+  mssqldb:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    command: /bin/bash ./entrypoint.sh
+    ports:
+      - 1433:1433
+    environment:
+      SA_PASSWORD: "yourStrong(!)Password"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - type: volume
+        source: dbdata
+        target: /var/opt/mssql/data
+      - type: bind
+        source: ./mssql/entrypoint.sh
+        target: /entrypoint.sh
+      - type: bind
+        source: ./mssql/db-init.sh
+        target: /db-init.sh
+      - type: bind
+        source: ./mssql/db-init.sql
+        target: /db-init.sql
+    networks:
+      mssqlnet:
+        aliases:
+          - mssqldb
+
+  employees:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - 5000:80
+    user: root
+    depends_on:
+      - mssqldb
+    networks:
+      mssqlnet:
+        aliases:
+          - employees
+
+volumes:
+  dbdata:
+
+networks:
+  mssqlnet:
+    driver: bridge
