@@ -503,7 +503,9 @@ class Fetcher {
 
         return fetch(url)
             .then(response => {
-                if (!response.ok)
+                if (response.status == 204) 
+                    return Promise.resolve([]);
+                else if (!response.ok)
                     throw new Error(response.statusText);
                 return response.json();
             })
