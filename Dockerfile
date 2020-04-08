@@ -10,19 +10,17 @@ RUN apt-get update -yq
 RUN apt-get install curl gnupg -yq 
 RUN curl -sL https://deb.nodesource.com/setup_13.x | bash -
 RUN apt-get install -y nodejs
-RUN npm install typescript
+RUN npm install -g typescript
 
-# copy csproj and restore as distinct layers
 COPY *.sln .
 COPY Employees.Rest/*.csproj ./Employees.Rest/
 RUN dotnet restore
 
-# copy everything else and build app
 COPY Employees.Rest/. ./Employees.Rest/
 
 WORKDIR /app/Employees.Rest/scripts
-RUN node ../node_modules/typescript/bin/tsc
-RUN node ../node_modules/gulp/bin/gulp.js
+RUN tsc
+RUN cp ./app.js ../wwwroot/scripts/
 
 WORKDIR /app/Employees.Rest
 RUN dotnet publish -c Release -o out
