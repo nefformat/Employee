@@ -27,7 +27,7 @@ git clone https://github.com/nefformat/Employee.git
 ```
 Переходим в директорию с приложением
 ```
-cd employee
+cd Employee
 ```
 Добавляем выполняемый бит для скриптов инициализации
 ```
