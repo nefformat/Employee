@@ -4,7 +4,6 @@
   "private": true,
   "devDependencies": {
     "del": "5.1.0",
-    "gulp": "4.0.2",
-    "typescript": "^3.8.3"
+    "gulp": "4.0.2"
   }
 }
