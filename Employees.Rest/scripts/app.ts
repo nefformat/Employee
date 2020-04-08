@@ -64,7 +64,10 @@ class Main {
         if (sender.value.length < 3)
             return;
         this.fetcher.fetchManagers(sender.value)
-            .then(managers => this.refreshManagersList(managers))
+            .then(managers => {
+                if (managers.length > 0)
+                    this.refreshManagersList(managers)
+            })
             .catch(ex => {
                 this.showError(ex.statusText)
             });
@@ -244,7 +247,6 @@ class Main {
                 }
             })
             .catch(ex => {
-                console.log(ex);
                 this.showError(ex.statusText)
             });
     }
@@ -503,7 +505,9 @@ class Fetcher {
 
         return fetch(url)
             .then(response => {
-                if (!response.ok)
+                if (response.status == 204) 
+                    return Promise.resolve([]);
+                else if (!response.ok)
                     throw new Error(response.statusText);
                 return response.json();
             })

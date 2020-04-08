@@ -7,58 +7,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-var Employee = (function () {
-    function Employee() {
-    }
-    return Employee;
-}());
-var Pagination = (function () {
-    function Pagination() {
-    }
-    return Pagination;
-}());
-var EmployeesResponse = (function () {
-    function EmployeesResponse(employees, pagination) {
+class Employee {
+}
+class Pagination {
+}
+class EmployeesResponse {
+    constructor(employees, pagination) {
         this.employees = employees;
         this.pagination = pagination;
     }
-    return EmployeesResponse;
-}());
-var HierarchyResponse = (function () {
-    function HierarchyResponse() {
-    }
-    return HierarchyResponse;
-}());
-var Main = (function () {
-    function Main(apiUrl) {
-        var _this = this;
+}
+class HierarchyResponse {
+}
+class Main {
+    constructor(apiUrl) {
         this.fetcher = new Fetcher(apiUrl);
         this.showAddEmployeeTab = true;
         this.pagination = new Pagination();
@@ -67,62 +29,66 @@ var Main = (function () {
         this.sortByNameOrder = 0;
         this.sortByDepartmentOrder = 0;
         this.placeDate();
-        document.getElementById('btnShowNewEmployee').addEventListener("click", function (event) { event.preventDefault(); _this.toggleAddEmployeeTab(); });
-        document.getElementById('btnCreate').addEventListener("click", function (event) { event.preventDefault(); _this.clickCreate(); });
-        document.getElementById('btnClose').addEventListener("click", function (event) { event.preventDefault(); _this.closeErrorWindow(); });
-        document.getElementsByName('name')[0].addEventListener("input", function (event) { return event.srcElement.classList.remove('validate-error'); });
-        document.getElementsByName('department')[0].addEventListener("input", function (event) { return event.srcElement.classList.remove('validate-error'); });
-        document.getElementsByName('position')[0].addEventListener("input", function (event) { return event.srcElement.classList.remove('validate-error'); });
-        document.getElementsByName('manager')[0].addEventListener("input", function (event) { event.preventDefault(); _this.inputManager(event.srcElement); });
-        document.getElementsByName('startdate')[0].addEventListener("input", function (event) { return event.srcElement.classList.remove('validate-error'); });
-        document.getElementById('btnNameSort').addEventListener("click", function (event) { event.preventDefault; _this.sortByName(); });
-        document.getElementById('btnDepartmentSort').addEventListener("click", function (event) { event.preventDefault; _this.sortByDepartment(); });
+        document.getElementById('btnShowNewEmployee').addEventListener("click", event => { event.preventDefault(); this.toggleAddEmployeeTab(); });
+        document.getElementById('btnCreate').addEventListener("click", event => { event.preventDefault(); this.clickCreate(); });
+        document.getElementById('btnClose').addEventListener("click", event => { event.preventDefault(); this.closeErrorWindow(); });
+        document.getElementsByName('name')[0].addEventListener("input", event => event.srcElement.classList.remove('validate-error'));
+        document.getElementsByName('department')[0].addEventListener("input", event => event.srcElement.classList.remove('validate-error'));
+        document.getElementsByName('position')[0].addEventListener("input", event => event.srcElement.classList.remove('validate-error'));
+        document.getElementsByName('manager')[0].addEventListener("input", event => { event.preventDefault(); this.inputManager(event.srcElement); });
+        document.getElementsByName('startdate')[0].addEventListener("input", event => event.srcElement.classList.remove('validate-error'));
+        document.getElementById('btnNameSort').addEventListener("click", event => { event.preventDefault; this.sortByName(); });
+        document.getElementById('btnDepartmentSort').addEventListener("click", event => { event.preventDefault; this.sortByDepartment(); });
         this.refetchEmployeesList();
     }
-    Main.prototype.inputManager = function (sender) {
-        var _this = this;
+    inputManager(sender) {
         sender.classList.remove('validate-error');
         if (sender.value.length < 3)
             return;
         this.fetcher.fetchManagers(sender.value)
-            .then(function (managers) { return _this.refreshManagersList(managers); })
-            .catch(function (ex) {
-            _this.showError(ex.statusText);
+            .then(managers => {
+            console.log("this.fetcher.fetchManagers");
+            console.log(managers);
+            if (managers.length > 0)
+                this.refreshManagersList(managers);
+        })
+            .catch(ex => {
+            this.showError(ex.statusText);
         });
-    };
-    Main.prototype.sortNameStraight = function (a, b) {
-        var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
+    }
+    sortNameStraight(a, b) {
+        let nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
         if (nameA < nameB)
             return -1;
         if (nameA > nameB)
             return 1;
         return 0;
-    };
-    Main.prototype.sortNameReverse = function (a, b) {
-        var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
+    }
+    sortNameReverse(a, b) {
+        let nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
         if (nameA > nameB)
             return -1;
         if (nameA < nameB)
             return 1;
         return 0;
-    };
-    Main.prototype.sortByDepartmentStraight = function (a, b) {
-        var depatmentA = a.department.toLowerCase(), depatmentB = b.department.toLowerCase();
+    }
+    sortByDepartmentStraight(a, b) {
+        let depatmentA = a.department.toLowerCase(), depatmentB = b.department.toLowerCase();
         if (depatmentA < depatmentB)
             return -1;
         if (depatmentA > depatmentB)
             return 1;
         return 0;
-    };
-    Main.prototype.sortByDepartmentReverse = function (a, b) {
-        var depatmentA = a.department.toLowerCase(), depatmentB = b.department.toLowerCase();
+    }
+    sortByDepartmentReverse(a, b) {
+        let depatmentA = a.department.toLowerCase(), depatmentB = b.department.toLowerCase();
         if (depatmentA > depatmentB)
             return -1;
         if (depatmentA < depatmentB)
             return 1;
         return 0;
-    };
-    Main.prototype.sortByName = function () {
+    }
+    sortByName() {
         this.sortByDepartmentOrder = 0;
         if (this.sortByNameOrder == 0) {
             this.sortByNameOrder = 1;
@@ -138,8 +104,8 @@ var Main = (function () {
         else if (this.sortByNameOrder == -1)
             this.employees.sort(this.sortNameReverse);
         this.refreshTable();
-    };
-    Main.prototype.sortByDepartment = function () {
+    }
+    sortByDepartment() {
         this.sortByNameOrder = 0;
         if (this.sortByDepartmentOrder == 0)
             this.sortByDepartmentOrder = 1;
@@ -152,21 +118,21 @@ var Main = (function () {
         else if (this.sortByDepartmentOrder == -1)
             this.employees.sort(this.sortByDepartmentReverse);
         this.refreshTable();
-    };
-    Main.prototype.clearCreateForm = function () {
+    }
+    clearCreateForm() {
         document.getElementsByName('name')[0].value = '';
         document.getElementsByName('department')[0].value = '';
         document.getElementsByName('position')[0].value = '';
         document.getElementsByName('manager')[0].value = '';
         this.placeDate();
-    };
-    Main.prototype.placeDate = function () {
-        var today = new Date();
-        var dd = today.getDate();
-        var mm = today.getMonth() + 1;
-        var sYyyy = today.getFullYear().toString();
-        var sDd = dd.toString();
-        var sMm = mm.toString();
+    }
+    placeDate() {
+        let today = new Date();
+        let dd = today.getDate();
+        let mm = today.getMonth() + 1;
+        let sYyyy = today.getFullYear().toString();
+        let sDd = dd.toString();
+        let sMm = mm.toString();
         if (dd < 10) {
             sDd = '0' + dd;
         }
@@ -174,15 +140,15 @@ var Main = (function () {
             sMm = '0' + mm;
         }
         document.getElementsByName('startdate')[0].value = sYyyy + '-' + sMm + '-' + sDd;
-    };
-    Main.prototype.closeErrorWindow = function () {
+    }
+    closeErrorWindow() {
         document.getElementById('modalWindow').style.display = "none";
-    };
-    Main.prototype.toggleAddEmployeeTab = function () {
+    }
+    toggleAddEmployeeTab() {
         this.showAddEmployeeTab = !this.showAddEmployeeTab;
-        var container1 = document.getElementById('container1');
-        var container2 = document.getElementById('container2');
-        var btn = document.getElementById('btnShowNewEmployee');
+        let container1 = document.getElementById('container1');
+        let container2 = document.getElementById('container2');
+        let btn = document.getElementById('btnShowNewEmployee');
         if (this.showAddEmployeeTab) {
             container1.style.display = "none";
             container2.style.display = "block";
@@ -193,90 +159,86 @@ var Main = (function () {
             container2.style.display = "none";
             btn.firstChild.textContent = "<";
         }
-    };
-    Main.prototype.createPageButton = function (text, dstLink, active) {
-        var _this = this;
-        var pagination = document.getElementById("pagination");
-        var div = document.createElement("div");
+    }
+    createPageButton(text, dstLink, active) {
+        let pagination = document.getElementById("pagination");
+        let div = document.createElement("div");
         div.classList.add("button");
-        var buttonText = document.createTextNode(text);
+        let buttonText = document.createTextNode(text);
         div.appendChild(buttonText);
         if (active) {
             div.classList.add("active");
             pagination.appendChild(div);
         }
         else {
-            var link = document.createElement("a");
+            let link = document.createElement("a");
             link.href = "#";
             link.id = dstLink.toString();
-            link.addEventListener("click", function (event) {
+            link.addEventListener("click", event => {
                 event.preventDefault();
-                var a = event.srcElement;
-                var div = a.parentNode;
+                let a = event.srcElement;
+                let div = a.parentNode;
                 if (a.id)
-                    _this.clickPage(Number(a.id));
+                    this.clickPage(Number(a.id));
                 else
-                    _this.clickPage(Number(div.id));
+                    this.clickPage(Number(div.id));
             });
             link.appendChild(div);
             pagination.appendChild(link);
         }
-    };
-    Main.prototype.clickCreate = function () {
-        var _this = this;
-        var form = document.getElementById('createemployee');
-        var formData = new FormData(form);
-        var obj = new Employee();
-        formData.forEach(function (value, key) { return obj[key] = value; });
+    }
+    clickCreate() {
+        let form = document.getElementById('createemployee');
+        let formData = new FormData(form);
+        let obj = new Employee();
+        formData.forEach((value, key) => obj[key] = value);
         this.fetcher.addEmployee(obj)
-            .then(function (x) {
+            .then(x => {
             if (x.status == 200) {
-                _this.showError("Пользователь успешно добавлен");
-                _this.refetchEmployeesList();
-                _this.toggleAddEmployeeTab();
-                _this.clearCreateForm();
+                this.showError("Пользователь успешно добавлен");
+                this.refetchEmployeesList();
+                this.toggleAddEmployeeTab();
+                this.clearCreateForm();
             }
             else if (x.status == 400) {
-                _this.showValidationErrors(x.errors);
+                this.showValidationErrors(x.errors);
             }
         })
-            .catch(function (ex) {
+            .catch(ex => {
             console.log(ex);
-            _this.showError(ex.statusText);
+            this.showError(ex.statusText);
         });
-    };
-    Main.prototype.showValidationErrors = function (errors) {
-        for (var error in errors) {
+    }
+    showValidationErrors(errors) {
+        for (let error in errors) {
             if (error[0] == '$')
                 error = error.substring(2);
-            var elem = document.getElementsByName(error.toLowerCase())[0];
+            let elem = document.getElementsByName(error.toLowerCase())[0];
             elem.classList.add("validate-error");
         }
-    };
-    Main.prototype.clickPage = function (page) {
+    }
+    clickPage(page) {
         this.pagination.activePage = page;
         this.sortByNameOrder = 0;
         this.sortByDepartmentOrder = 0;
         this.refetchEmployeesList();
-    };
-    Main.prototype.clickHierarchy = function (sender, id) {
-        var _this = this;
+    }
+    clickHierarchy(sender, id) {
         this.fetcher.fetchHierarchy(id)
-            .then(function (hierarchy) { return sender.parentElement.replaceChild(_this.showHierarchy(hierarchy), sender); })
-            .catch(function (ex) { return _this.showError(ex); });
-    };
-    Main.prototype.showHierarchy = function (data) {
-        var ul = document.createElement('ul');
-        for (var _i = 0, data_1 = data; _i < data_1.length; _i++) {
-            var manager = data_1[_i];
-            var li = document.createElement('li');
+            .then(hierarchy => sender.parentElement.replaceChild(this.showHierarchy(hierarchy), sender))
+            .catch(ex => this.showError(ex));
+    }
+    showHierarchy(data) {
+        let ul = document.createElement('ul');
+        for (let manager of data) {
+            let li = document.createElement('li');
             li.appendChild(document.createTextNode(manager.name + ' (' + manager.subCount + ')'));
             ul.appendChild(li);
         }
         return ul;
-    };
-    Main.prototype.refreshPagination = function () {
-        var pagination = document.getElementById("pagination");
+    }
+    refreshPagination() {
+        let pagination = document.getElementById("pagination");
         while (pagination.firstChild) {
             pagination.removeChild(pagination.firstChild);
         }
@@ -291,8 +253,8 @@ var Main = (function () {
             this.createPageButton('«', this.pagination.activePage - 1, false);
         if (this.pagination.activePage - 3 > 1)
             this.createPageButton('...', Math.floor((this.pagination.activePage - 3) / 2), false);
-        var startPage = this.pagination.activePage > 4 ? this.pagination.activePage - 3 : 1;
-        for (var i = startPage; i <= this.pagination.totalPages && i < startPage + 7; i++) {
+        let startPage = this.pagination.activePage > 4 ? this.pagination.activePage - 3 : 1;
+        for (let i = startPage; i <= this.pagination.totalPages && i < startPage + 7; i++) {
             if (i == this.pagination.activePage)
                 this.createPageButton(i.toString(), i, true);
             else
@@ -304,68 +266,66 @@ var Main = (function () {
             this.createPageButton('»', this.pagination.totalPages + 1, true);
         else
             this.createPageButton('»', this.pagination.activePage + 1, false);
-    };
-    Main.prototype.refetchEmployeesList = function () {
-        var _this = this;
+    }
+    refetchEmployeesList() {
         this.fetcher.fetchData(this.pagination.activePage)
-            .then(function (response) {
-            _this.employees = response.employees;
+            .then(response => {
+            this.employees = response.employees;
             if (response.pagination != null)
-                _this.pagination = response.pagination;
-            _this.refreshTable();
-            _this.refreshPagination();
+                this.pagination = response.pagination;
+            this.refreshTable();
+            this.refreshPagination();
         })
-            .catch(function (ex) { return _this.showError(ex); });
-    };
-    Main.prototype.refreshTableHeader = function () {
-        var nameHeader = document.getElementById('btnNameSort');
+            .catch(ex => this.showError(ex));
+    }
+    refreshTableHeader() {
+        let nameHeader = document.getElementById('btnNameSort');
         if (this.sortByNameOrder == 1)
             nameHeader.innerHTML = 'ФИО &darr;';
         else if (this.sortByNameOrder == -1)
             nameHeader.innerHTML = 'ФИО &uarr;';
         else
             nameHeader.innerHTML = 'ФИО &#8693;';
-        var nameDepartment = document.getElementById('btnDepartmentSort');
+        let nameDepartment = document.getElementById('btnDepartmentSort');
         if (this.sortByDepartmentOrder == 1)
             nameDepartment.innerHTML = 'Отдел &darr;';
         else if (this.sortByDepartmentOrder == -1)
             nameDepartment.innerHTML = 'Отдел &uarr;';
         else
             nameDepartment.innerHTML = 'Отдел &#8693;';
-    };
-    Main.prototype.refreshTable = function () {
-        var _this = this;
+    }
+    refreshTable() {
         this.refreshTableHeader();
-        var oldTbody = document.getElementById('employeesTable').tBodies[0];
-        var newTbody = document.createElement('tbody');
+        let oldTbody = document.getElementById('employeesTable').tBodies[0];
+        let newTbody = document.createElement('tbody');
         if (!this.employees || this.employees.length == 0) {
-            var row = newTbody.insertRow();
-            var cellNoData = row.insertCell();
+            let row = newTbody.insertRow();
+            let cellNoData = row.insertCell();
             cellNoData.colSpan = 7;
             cellNoData.style.textAlign = "center";
             cellNoData.textContent = "Нет данных о сотрудниках";
         }
         else {
             for (var i = 0; i < this.employees.length; i++) {
-                var row = newTbody.insertRow();
+                let row = newTbody.insertRow();
                 row.id = this.employees[i].id.toString();
-                var cellNum = row.insertCell();
+                let cellNum = row.insertCell();
                 cellNum.textContent = this.employees[i].id.toString();
-                var cellName = row.insertCell();
+                let cellName = row.insertCell();
                 cellName.textContent = this.employees[i].name;
-                var cellDepartment = row.insertCell();
+                let cellDepartment = row.insertCell();
                 cellDepartment.textContent = this.employees[i].department;
-                var cellPosition = row.insertCell();
+                let cellPosition = row.insertCell();
                 cellPosition.textContent = this.employees[i].position;
-                var cellManager = row.insertCell();
+                let cellManager = row.insertCell();
                 if (this.employees[i].manager) {
-                    var linkHierarchy = document.createElement("a");
+                    let linkHierarchy = document.createElement("a");
                     linkHierarchy.href = "#";
-                    linkHierarchy.addEventListener("click", function (event) {
+                    linkHierarchy.addEventListener("click", event => {
                         event.preventDefault();
-                        var a = event.srcElement;
-                        var src = a.parentNode;
-                        _this.clickHierarchy(a, Number(src.parentNode.id));
+                        let a = event.srcElement;
+                        let src = a.parentNode;
+                        this.clickHierarchy(a, Number(src.parentNode.id));
                     });
                     linkHierarchy.appendChild(document.createTextNode(this.employees[i].manager));
                     linkHierarchy.title = "Показать всех";
@@ -374,28 +334,28 @@ var Main = (function () {
                 else {
                     cellManager.textContent = "Руководитель отсутсвует";
                 }
-                var startDate = "";
-                var cellStartDate = row.insertCell();
+                let startDate = "";
+                let cellStartDate = row.insertCell();
                 if (this.employees[i].startDate) {
                     startDate = new Date(this.employees[i].startDate).toLocaleDateString("ru-RU");
                 }
                 cellStartDate.textContent = startDate;
-                var actionCell = row.insertCell();
-                var linkRemove = document.createElement("a");
+                let actionCell = row.insertCell();
+                let linkRemove = document.createElement("a");
                 linkRemove.href = "#";
-                linkRemove.addEventListener("click", function (event) {
+                linkRemove.addEventListener("click", event => {
                     event.preventDefault();
-                    var src = event.srcElement.parentNode;
-                    _this.clickRemove(Number(src.parentNode.id));
+                    let src = event.srcElement.parentNode;
+                    this.clickRemove(Number(src.parentNode.id));
                 });
                 linkRemove.appendChild(document.createTextNode("Удалить"));
                 actionCell.appendChild(linkRemove);
             }
         }
         oldTbody.parentNode.replaceChild(newTbody, oldTbody);
-    };
-    Main.prototype.refreshManagersList = function (managers) {
-        var managersHint = document.getElementById('managers');
+    }
+    refreshManagersList(managers) {
+        let managersHint = document.getElementById('managers');
         while (managersHint.firstChild) {
             managersHint.removeChild(managersHint.firstChild);
         }
@@ -404,122 +364,109 @@ var Main = (function () {
             option.value = item.name;
             managersHint.appendChild(option);
         });
-    };
-    Main.prototype.clickRemove = function (id) {
-        var _this = this;
+    }
+    clickRemove(id) {
         this.fetcher.removeEmployee(id)
-            .then(function () {
-            if (_this.employees.length == 1 && _this.pagination.activePage > 2)
-                _this.pagination.activePage--;
-            _this.refetchEmployeesList();
+            .then(() => {
+            if (this.employees.length == 1 && this.pagination.activePage > 2)
+                this.pagination.activePage--;
+            this.refetchEmployeesList();
         })
-            .catch(function (ex) { return _this.showError(ex); });
-    };
-    Main.prototype.showError = function (text) {
+            .catch(ex => this.showError(ex));
+    }
+    showError(text) {
         document.getElementById('modalWindow').style.display = 'block';
-        var newError = document.createElement('p');
+        let newError = document.createElement('p');
         newError.id = 'errorMessage';
-        var oldError = document.getElementById('errorMessage');
+        let oldError = document.getElementById('errorMessage');
         newError.appendChild(document.createTextNode(text));
         oldError.parentNode.replaceChild(newError, oldError);
-    };
-    return Main;
-}());
-var Fetcher = (function () {
-    function Fetcher(apiUrl) {
+    }
+}
+class Fetcher {
+    constructor(apiUrl) {
         this.apiUrl = apiUrl;
     }
-    Fetcher.prototype.fetchData = function (page) {
-        return __awaiter(this, void 0, void 0, function () {
-            var url;
-            return __generator(this, function (_a) {
-                if (page < 1)
-                    throw new Error("Некорректный номер страницы");
-                url = this.apiUrl + '?page=' + page;
-                return [2, fetch(url)
-                        .then(function (response) {
-                        if (!response.ok)
-                            throw new Error(response.statusText);
-                        return response.json();
-                    })
-                        .then(function (json) { return new EmployeesResponse(json.data, json.pagination); })];
+    fetchData(page) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (page < 1)
+                throw new Error("Некорректный номер страницы");
+            let url = this.apiUrl + '?page=' + page;
+            return fetch(url)
+                .then(response => {
+                if (!response.ok)
+                    throw new Error(response.statusText);
+                return response.json();
+            })
+                .then(json => new EmployeesResponse(json.data, json.pagination));
+        });
+    }
+    removeEmployee(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let request = new Request(this.apiUrl + id, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            return fetch(request)
+                .then(response => {
+                if (!response.ok) {
+                    throw new Error(response.statusText);
+                }
             });
         });
-    };
-    Fetcher.prototype.removeEmployee = function (id) {
-        return __awaiter(this, void 0, void 0, function () {
-            var request;
-            return __generator(this, function (_a) {
-                request = new Request(this.apiUrl + id, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-                return [2, fetch(request)
-                        .then(function (response) {
-                        if (!response.ok) {
-                            throw new Error(response.statusText);
-                        }
-                    })];
+    }
+    fetchHierarchy(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let url = this.apiUrl + 'hierarchy?id=' + id;
+            return fetch(url)
+                .then(response => {
+                if (!response.ok)
+                    throw new Error(response.statusText);
+                return response.json();
             });
         });
-    };
-    Fetcher.prototype.fetchHierarchy = function (id) {
-        return __awaiter(this, void 0, void 0, function () {
-            var url;
-            return __generator(this, function (_a) {
-                url = this.apiUrl + 'hierarchy?id=' + id;
-                return [2, fetch(url)
-                        .then(function (response) {
-                        if (!response.ok)
-                            throw new Error(response.statusText);
-                        return response.json();
-                    })];
+    }
+    fetchManagers(name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let url = this.apiUrl + 'byname/?name=' + name;
+            return fetch(url)
+                .then(response => {
+                console.log("fetch");
+                console.log(response);
+                if (response.status == 204) {
+                    return Promise.resolve([]);
+                    console.log("in fetchManagers");
+                }
+                else if (!response.ok)
+                    throw new Error(response.statusText);
+                return response.json();
             });
         });
-    };
-    Fetcher.prototype.fetchManagers = function (name) {
-        return __awaiter(this, void 0, void 0, function () {
-            var url;
-            return __generator(this, function (_a) {
-                url = this.apiUrl + 'byname/?name=' + name;
-                return [2, fetch(url)
-                        .then(function (response) {
-                        if (!response.ok)
-                            throw new Error(response.statusText);
-                        return response.json();
-                    })];
+    }
+    addEmployee(employee) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let request = new Request(this.apiUrl, {
+                method: 'POST',
+                body: JSON.stringify(employee),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            return fetch(request)
+                .then(response => {
+                if (response.status == 200)
+                    return response;
+                else if (response.status == 400)
+                    return response.json();
+                throw new Error(response.statusText);
             });
         });
-    };
-    Fetcher.prototype.addEmployee = function (employee) {
-        return __awaiter(this, void 0, void 0, function () {
-            var request;
-            return __generator(this, function (_a) {
-                request = new Request(this.apiUrl, {
-                    method: 'POST',
-                    body: JSON.stringify(employee),
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-                return [2, fetch(request)
-                        .then(function (response) {
-                        if (response.status == 200)
-                            return response;
-                        else if (response.status == 400)
-                            return response.json();
-                        throw new Error(response.statusText);
-                    })];
-            });
-        });
-    };
-    return Fetcher;
-}());
-var main;
-window.onload = function () {
-    console.log("Hello!");
+    }
+}
+let main;
+window.onload = () => {
     main = new Main('/api/');
 };
 //# sourceMappingURL=app.js.map
