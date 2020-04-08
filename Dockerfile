@@ -20,7 +20,7 @@ COPY Employees.Rest/. ./Employees.Rest/
 
 WORKDIR /app/Employees.Rest/scripts
 RUN tsc
-RUN cp ./app.js ../wwwroot/scripts/
+RUN cp ./* ../wwwroot/scripts/
 
 WORKDIR /app/Employees.Rest
 RUN dotnet publish -c Release -o out
