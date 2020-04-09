@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Employees.Rest.Infra;
 using Employees.Rest.Middleware;
+using Serilog.Extensions.Logging.File;
 
 namespace Employees.Rest
 {
@@ -30,18 +31,19 @@ namespace Employees.Rest
             services.AddControllers();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, ILogger<Startup> logger)
         {
-            app.UseMiddleware<RequestLoggingMiddleware>();
             app.UseDefaultFiles();
             app.UseStaticFiles();
-
+            app.UseMiddleware<RequestResponseLoggingMiddleware>();
 
             if (env.IsDevelopment())
             {
+                logger.LogInformation("In Development environment");
+                // Logging to file enable only in development coz in prod docker use stdout logging driver
+                loggerFactory.AddFile("Logs/log-{Date}.txt");
                 app.UseDeveloperExceptionPage();
             }
-
 
             app.UseRouting();
             app.UseEndpoints(endpoints =>

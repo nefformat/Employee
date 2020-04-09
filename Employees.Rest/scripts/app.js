@@ -47,8 +47,6 @@ class Main {
             return;
         this.fetcher.fetchManagers(sender.value)
             .then(managers => {
-            console.log("this.fetcher.fetchManagers");
-            console.log(managers);
             if (managers.length > 0)
                 this.refreshManagersList(managers);
         })
@@ -195,7 +193,7 @@ class Main {
         this.fetcher.addEmployee(obj)
             .then(x => {
             if (x.status == 200) {
-                this.showError("Пользователь успешно добавлен");
+                this.showError("Сотрудник успешно добавлен");
                 this.refetchEmployeesList();
                 this.toggleAddEmployeeTab();
                 this.clearCreateForm();
@@ -205,7 +203,6 @@ class Main {
             }
         })
             .catch(ex => {
-            console.log(ex);
             this.showError(ex.statusText);
         });
     }
@@ -433,12 +430,8 @@ class Fetcher {
             let url = this.apiUrl + 'byname/?name=' + name;
             return fetch(url)
                 .then(response => {
-                console.log("fetch");
-                console.log(response);
-                if (response.status == 204) {
+                if (response.status == 204)
                     return Promise.resolve([]);
-                    console.log("in fetchManagers");
-                }
                 else if (!response.ok)
                     throw new Error(response.statusText);
                 return response.json();

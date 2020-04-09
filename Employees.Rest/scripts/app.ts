@@ -237,7 +237,7 @@ class Main {
         this.fetcher.addEmployee(obj)
             .then(x => {
                 if (x.status == 200) {
-                    this.showError("Пользователь успешно добавлен");
+                    this.showError("Сотрудник успешно добавлен");
                     this.refetchEmployeesList();
                     this.toggleAddEmployeeTab();
                     this.clearCreateForm();

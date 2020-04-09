@@ -7,3 +7,4 @@ node_modules
 Employees.Rest/Employees.Rest.csproj.user
 bin
 Employees.Rest/Properties
+Logs
