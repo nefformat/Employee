@@ -505,11 +505,7 @@ class Fetcher {
 
         return fetch(url)
             .then(response => {
-<<<<<<< HEAD
                 if (response.status == 204 || response.status == 404) 
-=======
-                if (response.status == 204) 
->>>>>>> 9df6e3313b7fc87bb78649074400accc1d7e47b6
                     return Promise.resolve([]);
                 else if (!response.ok)
                     throw new Error(response.statusText);
