@@ -14,13 +14,14 @@ RUN npm install -g typescript
 
 COPY *.sln .
 COPY Employees.Rest/*.csproj ./Employees.Rest/
+COPY Employees.Rest.Tests/*.csproj ./Employees.Rest.Tests/
 RUN dotnet restore
 
 COPY Employees.Rest/. ./Employees.Rest/
 
 WORKDIR /app/Employees.Rest/scripts
 RUN tsc
-RUN cp ./app.js ../wwwroot/scripts/
+RUN cp ./* ../wwwroot/scripts/
 
 WORKDIR /app/Employees.Rest
 RUN dotnet publish -c Release -o out
