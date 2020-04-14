@@ -59,7 +59,6 @@ namespace Employees.Rest.Infra
             }
             return employees.Skip(1).Reverse();
         }
-
         public void Add(Employee employee)
         {
             if (employee == null)
@@ -131,7 +130,6 @@ namespace Employees.Rest.Infra
 
             Employee employee16 = new Employee { Id = 16, Name = "Сергеев Савелий Владимирович", Department = "Отдел торговли", Position = "Покупатель", ManagerId = 10, StartDate = DateTime.Now };
             _employees.Add(employee16);
-
         }
     }
 }

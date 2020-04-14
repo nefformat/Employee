@@ -24,14 +24,31 @@ namespace Employees.Rest.Controllers
         }
 
         [Route("byname/")]
-        public ActionResult<EmployeesResponse> GetListByName(string name)
+        public ActionResult<IEnumerable<EmployeeResponse>> GetListByName(string name)
         {
             if (string.IsNullOrEmpty(name) || name.Length < 3)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return NotFound();
             }
 
-            return Ok(_employeesRepo.GetListByName(name));
+            IEnumerable<Employee> employees = _employeesRepo.GetListByName(name);
+
+            if (employees == null)
+                return NoContent();
+
+            var result = employees.Select(x =>
+                new EmployeeResponse
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Department = x.Department,
+                    Position = x.Position,
+                    Manager = x.ManagerId == null ? null : _employeesRepo.GetById((int)x.ManagerId).Name,
+                    StartDate = x.StartDate
+                }
+            );
+
+            return Ok(result);
         }
 
         [HttpGet]
@@ -64,11 +81,11 @@ namespace Employees.Rest.Controllers
                 return NotFound();
 
             if (employeesCount == 0)
-            return new EmployeesResponse
-            {
-                Data = null,
-                Pagination = new PaginationResponse { ActivePage = 1, TotalPages = 0 }
-            };
+                return new EmployeesResponse
+                {
+                    Data = null,
+                    Pagination = new PaginationResponse { ActivePage = 1, TotalPages = 0 }
+                };
 
             List<EmployeeResponse> employees = _employeesRepo.Get((page - 1) * _pageSize, _pageSize)
                 .Select(x =>
